@@ -2,6 +2,7 @@ Attribute VB_Name = "main"
 Option Explicit
 
 Public Sub MakeQuiz()
+    ' main
     
     ' begin
     
@@ -257,5 +258,34 @@ Private Sub CopyEffects(template_slide As Object, target_slide As Object, correc
         End With
         
     Next EF
+    
+End Sub
+
+
+Public Sub AddToContextMenu()
+    
+    With Application.CommandBars
+        
+        Dim i As Long
+        For i = 1 To .Count
+            
+            If .Item(i).Name = "Cell" Then
+                
+                With .Item(i).Controls.Add(Type:=msoControlPopup, Temporary:=True)
+                    .BeginGroup = True
+                    .Caption = ThisWorkbook.Name
+                    
+                    With .Controls.Add(Type:=msoControlButton, Temporary:=True)
+                        .Caption = "Make &Quiz"
+                        .OnAction = ThisWorkbook.Name & "!MakeQuiz"
+                    End With
+                    
+                End With
+                
+            End If
+            
+        Next i
+        
+    End With
     
 End Sub
