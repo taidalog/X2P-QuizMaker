@@ -8,7 +8,6 @@ Public Sub MakeQuiz()
     
     On Error Resume Next
     
-    Dim ST As Double: ST = Timer
     
     Dim saveFullName As String
     saveFullName = GetSaveFullName(ActiveWorkbook)
@@ -24,6 +23,8 @@ Public Sub MakeQuiz()
     End If
     
     targetPresentation.SaveAs saveFullName
+    
+    Dim ST As Double: ST = Timer
     
     Application.StatusBar = "starting..."
     
@@ -282,7 +283,7 @@ Public Sub AddToContextMenu()
                 
                 With .Item(i).Controls.Add(Type:=msoControlPopup, Temporary:=True)
                     .BeginGroup = True
-                    .Caption = ThisWorkbook.Name
+                    .Caption = "&" & ThisWorkbook.Name
                     
                     With .Controls.Add(Type:=msoControlButton, Temporary:=True)
                         .Caption = "Make &Quiz"
