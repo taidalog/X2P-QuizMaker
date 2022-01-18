@@ -49,7 +49,7 @@ Public Sub MakeQuiz()
         Dim ST2 As Double: ST2 = Timer
         
         If CLng(quizList(i, 1)) > slidesCount Then
-            '
+            GoTo Continue
         End If
         
         Dim templateSlide As Object
@@ -58,7 +58,6 @@ Public Sub MakeQuiz()
         Dim targetSlide As Object
         Set targetSlide = templateSlide.Duplicate
         targetSlide.MoveTo targetPresentation.Slides.Count
-        
         targetSlide.SlideShowTransition.Hidden = msoFalse
         
         Call ClearEffects(targetSlide)
@@ -95,6 +94,7 @@ Public Sub MakeQuiz()
         
         Debug.Print Timer - ST2, "loop " & i - 1
         
+Continue:
         Application.StatusBar = i - 1 & " of " & UBound(quizList, 1) - 1
         
     Next i
@@ -194,39 +194,48 @@ End Sub
 
 Private Sub CopyEffects(template_slide As Object, target_slide As Object, correct_choice_index As Long)
     
+    Dim regex As Object
+    Set regex = CreateObject("VBScript.RegExp")
+    regex.Pattern = "\{(\d+)\}"
+    
     Dim EF As Object
     For Each EF In template_slide.TimeLine.MainSequence
         
-        Dim targetEffectText As String
-        targetEffectText = EF.Shape.TextFrame.TextRange.Text
+        Dim shapeText As String
+        shapeText = EF.Shape.TextFrame.TextRange.Text
         
-        Dim targetEffectTextWithoutBraces As String
-        targetEffectTextWithoutBraces = Replace(targetEffectText, "{", "")
-        targetEffectTextWithoutBraces = Replace(targetEffectTextWithoutBraces, "}", "")
+        ' matching the shape text to judge the text has a number
+        Dim matchResult As Object
+        Set matchResult = regex.Execute(shapeText)
         
-        If IsNumeric(targetEffectTextWithoutBraces) Then
+        Dim textForSearchingShape As String
+        
+        If matchResult.Count = 0 Then
+            ' didn't match, meaning the shape had no number
+            textForSearchingShape = shapeText
+        Else
+            ' matched, meaning the shape had a number
+            Dim numberInBraces As Long
+            numberInBraces = CLng(matchResult(0).SubMatches(0))
             
-            If targetEffectTextWithoutBraces = 1 Then
-                targetEffectText = "{" & correct_choice_index & "}"
+            ' shifting the shape number
+            If numberInBraces = 1 Then
+                textForSearchingShape = "{" & correct_choice_index & "}"
             Else
-                If targetEffectTextWithoutBraces <= correct_choice_index Then
-                    targetEffectText = "{" & CLng(targetEffectTextWithoutBraces) - 1 & "}"
+                If numberInBraces <= correct_choice_index Then
+                    textForSearchingShape = "{" & numberInBraces - 1 & "}"
                 End If
             End If
             
         End If
         
-        Dim targetShape As Object
-        Set targetShape = GetShapeByText(target_slide, targetEffectText)
+        ' getting the effect to add effect to
+        Dim shapeToAddEffectTo As Object
+        Set shapeToAddEffectTo = GetShapeByText(target_slide, textForSearchingShape)
         
-        Dim tmpEffectType As Long
-        tmpEffectType = EF.EffectType
-        
+        ' adding a new effect to the shape
         Dim newEf As Object
-        Set newEf = target_slide.TimeLine.MainSequence.AddEffect(targetShape, EF.EffectType, , EF.Timing.TriggerType)
-        
-        Dim tmpBehaviorsType As Long
-        tmpBehaviorsType = EF.Behaviors.Item(1).Type
+        Set newEf = target_slide.TimeLine.MainSequence.AddEffect(shapeToAddEffectTo, EF.EffectType, , EF.Timing.TriggerType)
         
         With newEf
         
