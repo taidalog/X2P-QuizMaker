@@ -31,7 +31,36 @@ Public Sub MakeQuiz()
     ' The new file will be input into `targetPresentation` variable.
     targetPresentation.SaveAs saveFullName
     
+    ' Gets the number of slides in the template PPT file.
+    '`slidesCount` variable has the number of slides at this moment.
+    Dim slidesCount As Long
+    slidesCount = targetPresentation.Slides.Count
+    
     Dim ST As Double: ST = Timer
+    
+    ' Specifies the cell.
+    ' Modify the range address if needed.
+    Dim quizListTopLeftCell As Range
+    Set quizListTopLeftCell = ThisWorkbook.ActiveSheet.Range("A3")
+    
+    ' Gets the range of quiz list.
+    Dim quizListRange As Range
+    Set quizListRange = quizListTopLeftCell.CurrentRegion
+    
+    '
+    Dim quizList As Variant
+    quizList = quizListRange.Resize(quizListRange.Rows.Count - 1).Offset(1, 0).Value
+    
+    '
+    Dim labelRange As Range
+    Set labelRange = quizListRange.Resize(1)
+    
+    '
+    Dim labels As Variant
+    labels = labelRange.Value
+    
+    Dim templateColumnIndex As Long
+    templateColumnIndex = 1
     
     Application.StatusBar = "starting..."
     
@@ -42,12 +71,6 @@ Public Sub MakeQuiz()
     
     ''''''''''''''''''''''''''''''
     'process
-    
-    Dim quizList As Variant
-    quizList = ThisWorkbook.ActiveSheet.Cells(1, 1).CurrentRegion.Value
-    
-    Dim slidesCount As Long
-    slidesCount = targetPresentation.Slides.Count
     
     Application.StatusBar = "0 / " & UBound(quizList, 1) - 1
     
