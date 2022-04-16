@@ -6,8 +6,7 @@ Public Sub MakeQuiz()
     
     ' begin
     
-    On Error Resume Next
-    
+    On Error GoTo Finally
     
     Dim saveFullName As String
     saveFullName = GetSaveFullName(ActiveWorkbook)
@@ -284,7 +283,7 @@ Public Sub AddToContextMenu()
                 With .Item(i).Controls.Add(Type:=msoControlPopup, Temporary:=True)
                     .BeginGroup = True
                     .Caption = "&" & ThisWorkbook.Name
-                    
+
                     With .Controls.Add(Type:=msoControlButton, Temporary:=True)
                         .Caption = "Make &Quiz"
                         .OnAction = ThisWorkbook.Name & "!MakeQuiz"
