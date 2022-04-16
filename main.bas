@@ -6,7 +6,7 @@ Public Sub MakeQuiz()
     
     ' begin
     
-'    On Error GoTo Finally
+    On Error GoTo Finally
     
     ' Specifies the template PPT file path by cell.
     Dim templatePPTFullName As String
@@ -74,59 +74,71 @@ Public Sub MakeQuiz()
     
     Application.StatusBar = "0 / " & UBound(quizList, 1) - 1
     
+    ' For all quizzes,
+    '     copies template slide
+    '     and pastes texts to shapes in the slides.
     Dim i As Long
-    For i = 2 To UBound(quizList, 1)
+    For i = 1 To UBound(quizList, 1)
         
         Dim ST2 As Double: ST2 = Timer
         
-        If CLng(quizList(i, 1)) > slidesCount Then
+        ' Gets the template slide index from `quizList` 2D array.
+        Dim templateSlideIndex As Long '
+        templateSlideIndex = CLng(quizList(i, templateColumnIndex))
+        
+        ' Skips if `templateSlideIndex` = 0.
+        If templateSlideIndex = 0 Then '
             GoTo Continue
         End If
         
+        ' Skips if `templateSlideIndex` exceeds `slidesCount`.
+        If templateSlideIndex > slidesCount Then
+            GoTo Continue
+        End If
+        
+        ' Gets template slide.
+        ' No change will be made to `templateSlide`.
         Dim templateSlide As Object
-        Set templateSlide = targetPresentation.Slides(CLng(quizList(i, 1)))
+        Set templateSlide = targetPresentation.Slides(templateSlideIndex)
         
-        Dim targetSlide As Object
-        Set targetSlide = templateSlide.Duplicate
-        targetSlide.MoveTo targetPresentation.Slides.Count
-        targetSlide.SlideShowTransition.Hidden = msoFalse
+        ' Duplicates `templateSlide` and put it in `copiesSlide`.
+        ' All changes will be made to `copiedSlide` instead of `templateSlide`.
+        Dim copiedSlide As Object
+        Set copiedSlide = templateSlide.Duplicate
+        copiedSlide.MoveTo targetPresentation.Slides.Count
+        copiedSlide.SlideShowTransition.Hidden = msoFalse
         
-        Call ClearEffects(targetSlide)
-        Call CopyEffects(templateSlide, targetSlide, CLng(quizList(i, 2)))
-        
-        Dim titleShape As Object
-        Set titleShape = GetShapeByText(targetSlide, "{title}")
-        If Not titleShape Is Nothing Then
-            titleShape.TextFrame.TextRange.Text = quizList(i, 3)
-            Set titleShape = Nothing
-        End If
-        
-        Dim textShape As Object
-        Set textShape = GetShapeByText(targetSlide, "{Q}")
-        If Not textShape Is Nothing Then
-            textShape.TextFrame.TextRange.Text = quizList(i, 4)
-            Set textShape = Nothing
-        End If
-        
+        ' For all columns in each quiz,
+        '     gets the label and
+        '     pastes text to shape.
         Dim j As Long
-        For j = 5 To UBound(quizList, 2)
+        For j = 1 To UBound(labels, 2)
             
-            Dim choiceIndex As Long
-            choiceIndex = j - 4
+            If j = templateColumnIndex Then GoTo ContinueJ
             
-            Dim choiceShape As Object
-            Set choiceShape = GetShapeByText(targetSlide, "{" & choiceIndex & "}")
-            If Not choiceShape Is Nothing Then
-                choiceShape.TextFrame.TextRange.Text = quizList(i, j)
-                Set choiceShape = Nothing
+            ' Gets the label for the column.
+            Dim targetLabel As String
+            targetLabel = CStr(labels(1, j))
+            If targetLabel = "" Then
+                GoTo ContinueJ
             End If
             
+            ' Gets the text to paste to the shape.
+            Dim targetText As String
+            targetText = CStr(quizList(i, j))
+            If targetText = "" Then
+                GoTo ContinueJ
+            End If
+            
+            ' Invokes `PasteTextToShape` procedure to paste the text to the shape.
+            Call PasteTextToShape(copiedSlide, targetLabel, targetText)
+            
+ContinueJ:
         Next j
         
-        Debug.Print Timer - ST2, "loop " & i - 1
-        
 Continue:
-        Application.StatusBar = i - 1 & " of " & UBound(quizList, 1) - 1
+        Debug.Print Timer - ST2, "loop " & i
+        Application.StatusBar = i & " of " & UBound(quizList, 1)
         
     Next i
     
@@ -150,33 +162,6 @@ Finally:
     Application.StatusBar = False
     
 End Sub
-
-
-'Private Function GetSelectedPresentation() As Object
-'
-'    Dim targetFullName As String
-'    targetFullName = Application.GetOpenFilename("PowerPoint Presentation,*.pptx,PowerPoint 97-2003 Presentaion,*.ppt")
-'
-'    If targetFullName = "False" Then
-'        Exit Function
-'    End If
-'
-'    Dim PPT As Object
-'    Set PPT = CreateObject("PowerPoint.Application")
-'
-'    Dim PR As Object
-'    For Each PR In PPT.Presentations
-'        If PR.FullName = targetFullName Then
-'            Set GetSelectedPresentation = PR
-'            Set PPT = Nothing
-'            Exit Function
-'        End If
-'    Next PR
-'
-'    Set GetSelectedPresentation = PPT.Presentations.Open(targetFullName, ReadOnly:=True)
-'    Set PPT = Nothing
-'
-'End Function
 
 
 Private Function GetOrOpenPresentation(file_fullname As String) As Object
@@ -228,6 +213,19 @@ Private Function GetSaveFullName(quiz_list_workbook As Workbook) As String
 End Function
 
 
+Private Sub PasteTextToShape(slide_object As Object, lookup_label As String, quiz_text As String)
+    Dim targetShape As Object
+    Set targetShape = GetShapeByText(slide_object, lookup_label)
+    
+    If targetShape Is Nothing Then
+        Debug.Print "Shape with Text """ & lookup_label & """ was not found."
+        Exit Sub
+    End If
+    
+    targetShape.TextFrame.TextRange.Text = quiz_text
+End Sub
+
+
 Private Function GetShapeByText(target_slide As Object, target_text As String) As Object
     
     Dim SHP As Object
@@ -241,97 +239,6 @@ Private Function GetShapeByText(target_slide As Object, target_text As String) A
     Next SHP
     
 End Function
-
-
-Private Sub ClearEffects(target_slide As Object)
-    
-    With target_slide.TimeLine.MainSequence
-        Dim i As Long
-        For i = .Count To 1 Step -1
-            .Item(i).Delete
-        Next i
-    End With
-    
-End Sub
-
-
-Private Sub CopyEffects(template_slide As Object, target_slide As Object, correct_choice_index As Long)
-    
-    Dim regex As Object
-    Set regex = CreateObject("VBScript.RegExp")
-    regex.Pattern = "\{(\d+)\}"
-    
-    Dim EF As Object
-    For Each EF In template_slide.TimeLine.MainSequence
-        
-        Dim shapeText As String
-        shapeText = EF.Shape.TextFrame.TextRange.Text
-        
-        ' matching the shape text to judge the text has a number
-        Dim matchResult As Object
-        Set matchResult = regex.Execute(shapeText)
-        
-        Dim textForSearchingShape As String
-        
-        If matchResult.Count = 0 Then
-            ' didn't match, meaning the shape had no number
-            textForSearchingShape = shapeText
-        Else
-            ' matched, meaning the shape had a number
-            Dim numberInBraces As Long
-            numberInBraces = CLng(matchResult(0).SubMatches(0))
-            
-            ' shifting the shape number
-            If numberInBraces = 1 Then
-                textForSearchingShape = "{" & correct_choice_index & "}"
-            Else
-                If numberInBraces <= correct_choice_index Then
-                    textForSearchingShape = "{" & numberInBraces - 1 & "}"
-                End If
-            End If
-            
-        End If
-        
-        ' getting the effect to add effect to
-        Dim shapeToAddEffectTo As Object
-        Set shapeToAddEffectTo = GetShapeByText(target_slide, textForSearchingShape)
-        
-        ' adding a new effect to the shape
-        Dim newEf As Object
-        Set newEf = target_slide.TimeLine.MainSequence.AddEffect(shapeToAddEffectTo, EF.EffectType, , EF.Timing.TriggerType)
-        
-        With newEf
-        
-'            .Behaviors.Item(1).Type = ef.Behaviors.Item(1).Type
-            
-'            .EffectInformation.AfterEffect = ef.EffectInformation.AfterEffect
-'            .EffectInformation.TextUnitEffect = ef.EffectInformation.TextUnitEffect
-            
-            If EF.Exit = -1 Then
-                .Exit = EF.Exit
-            End If
-            
-            .Timing.Accelerate = EF.Timing.Accelerate
-            .Timing.AutoReverse = EF.Timing.AutoReverse
-            .Timing.BounceEnd = EF.Timing.BounceEnd
-            .Timing.BounceEndIntensity = EF.Timing.BounceEndIntensity
-            .Timing.Decelerate = EF.Timing.Decelerate
-            .Timing.Duration = EF.Timing.Duration
-            .Timing.RepeatCount = EF.Timing.RepeatCount
-            .Timing.RepeatDuration = EF.Timing.RepeatDuration
-            .Timing.Restart = EF.Timing.Restart
-            .Timing.RewindAtEnd = EF.Timing.RewindAtEnd
-            .Timing.SmoothEnd = EF.Timing.SmoothEnd
-            .Timing.SmoothStart = EF.Timing.SmoothStart
-            .Timing.Speed = EF.Timing.Speed
-'            .Timing.TriggerBookmark = ef.Timing.TriggerBookmark
-            .Timing.TriggerDelayTime = EF.Timing.TriggerDelayTime
-            
-        End With
-        
-    Next EF
-    
-End Sub
 
 
 Public Sub AddToContextMenu()
