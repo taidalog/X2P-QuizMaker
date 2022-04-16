@@ -6,22 +6,29 @@ Public Sub MakeQuiz()
     
     ' begin
     
-    On Error Resume Next
+'    On Error GoTo Finally
     
-    
-    Dim saveFullName As String
-    saveFullName = GetSaveFullName(ActiveWorkbook)
+    ' Specifies the template PPT file path by cell.
+    Dim templatePPTFullName As String
+    templatePPTFullName = Replace(ActiveSheet.Range("A1").Value, """", "")
     
     Dim PPT As Object
     Set PPT = CreateObject("PowerPoint.Application")
     
+    ' Gets or opens the template PPT file.
     Dim targetPresentation As Object
-    Set targetPresentation = GetSelectedPresentation
+    Set targetPresentation = GetOrOpenPresentation(templatePPTFullName)
     If targetPresentation Is Nothing Then
-        MsgBox "Suspended"
-        Exit Sub
+        Debug.Print "Template file `" & templatePPTFullName & "` was not found."
+        MsgBox "Template file `" & templatePPTFullName & "` was not found."
+        GoTo Finally
     End If
     
+    Dim saveFullName As String
+    saveFullName = GetSaveFullName(ThisWorkbook)
+    
+    ' Saves the template PPT file as a new file.
+    ' The new file will be input into `targetPresentation` variable.
     targetPresentation.SaveAs saveFullName
     
     Dim ST As Double: ST = Timer
@@ -37,7 +44,7 @@ Public Sub MakeQuiz()
     'process
     
     Dim quizList As Variant
-    quizList = ActiveWorkbook.ActiveSheet.Cells(1, 1).CurrentRegion.Value
+    quizList = ThisWorkbook.ActiveSheet.Cells(1, 1).CurrentRegion.Value
     
     Dim slidesCount As Long
     slidesCount = targetPresentation.Slides.Count
@@ -111,7 +118,7 @@ Continue:
     Debug.Print Timer - ST, "end"
     Debug.Print
     
-    ActiveWorkbook.Activate
+    ThisWorkbook.Activate
     MsgBox "Finished."
     
 Finally:
@@ -122,28 +129,60 @@ Finally:
 End Sub
 
 
-Private Function GetSelectedPresentation() As Object
+'Private Function GetSelectedPresentation() As Object
+'
+'    Dim targetFullName As String
+'    targetFullName = Application.GetOpenFilename("PowerPoint Presentation,*.pptx,PowerPoint 97-2003 Presentaion,*.ppt")
+'
+'    If targetFullName = "False" Then
+'        Exit Function
+'    End If
+'
+'    Dim PPT As Object
+'    Set PPT = CreateObject("PowerPoint.Application")
+'
+'    Dim PR As Object
+'    For Each PR In PPT.Presentations
+'        If PR.FullName = targetFullName Then
+'            Set GetSelectedPresentation = PR
+'            Set PPT = Nothing
+'            Exit Function
+'        End If
+'    Next PR
+'
+'    Set GetSelectedPresentation = PPT.Presentations.Open(targetFullName, ReadOnly:=True)
+'    Set PPT = Nothing
+'
+'End Function
+
+
+Private Function GetOrOpenPresentation(file_fullname As String) As Object
     
-    Dim targetFullName As String
-    targetFullName = Application.GetOpenFilename("PowerPoint Presentation,*.pptx,PowerPoint 97-2003 Presentaion,*.ppt")
-    
-    If targetFullName = "False" Then
+    Dim FSO As Object
+    Set FSO = CreateObject("Scripting.FileSystemObject")
+    If FSO.FileExists(file_fullname) = False Then
+        Debug.Print "Designated file was not found."
+        Set FSO = Nothing
         Exit Function
     End If
+    
+    Set FSO = Nothing
     
     Dim PPT As Object
     Set PPT = CreateObject("PowerPoint.Application")
     
-    Dim pr As Object
-    For Each pr In PPT.Presentations
-        If pr.FullName = targetFullName Then
-            Set GetSelectedPresentation = pr
+    '
+    Dim PR As Object
+    For Each PR In PPT.Presentations
+        If PR.FullName = file_fullname Then
+            Set GetOrOpenPresentation = PR
             Set PPT = Nothing
             Exit Function
         End If
-    Next pr
+    Next PR
     
-    Set GetSelectedPresentation = PPT.Presentations.Open(targetFullName, ReadOnly:=True)
+    '
+    Set GetOrOpenPresentation = PPT.Presentations.Open(file_fullname, ReadOnly:=True)
     Set PPT = Nothing
     
 End Function
@@ -284,7 +323,7 @@ Public Sub AddToContextMenu()
                 With .Item(i).Controls.Add(Type:=msoControlPopup, Temporary:=True)
                     .BeginGroup = True
                     .Caption = "&" & ThisWorkbook.Name
-                    
+
                     With .Controls.Add(Type:=msoControlButton, Temporary:=True)
                         .Caption = "Make &Quiz"
                         .OnAction = ThisWorkbook.Name & "!MakeQuiz"
