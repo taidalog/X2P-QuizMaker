@@ -9,7 +9,7 @@ Public Sub MakeQuiz()
     On Error GoTo Finally
     
     Dim saveFullName As String
-    saveFullName = GetSaveFullName(ActiveWorkbook)
+    saveFullName = GetSaveFullName(ThisWorkbook)
     
     Dim PPT As Object
     Set PPT = CreateObject("PowerPoint.Application")
@@ -36,7 +36,7 @@ Public Sub MakeQuiz()
     'process
     
     Dim quizList As Variant
-    quizList = ActiveWorkbook.ActiveSheet.Cells(1, 1).CurrentRegion.Value
+    quizList = ThisWorkbook.ActiveSheet.Cells(1, 1).CurrentRegion.Value
     
     Dim slidesCount As Long
     slidesCount = targetPresentation.Slides.Count
@@ -110,7 +110,7 @@ Continue:
     Debug.Print Timer - ST, "end"
     Debug.Print
     
-    ActiveWorkbook.Activate
+    ThisWorkbook.Activate
     MsgBox "Finished."
     
 Finally:
