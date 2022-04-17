@@ -25,7 +25,7 @@ Public Sub MakeQuiz()
     End If
     
     Dim saveFullName As String
-    saveFullName = GetSaveFullName(ThisWorkbook)
+    saveFullName = NewSaveFullNameX2P(ThisWorkbook.FullName, "_yyyy-MM-dd_HH-mm-ss", templatePPTFullName)
     
     ' Saves the template PPT file as a new file.
     ' The new file will be input into `targetPresentation` variable.
