@@ -223,23 +223,6 @@ Private Function NewSaveFullNameX2P(file_fullname As String, datetime_format As 
 End Function
 
 
-Private Function GetSaveFullName(quiz_list_workbook As Workbook) As String
-    
-    Dim FSO As Object
-    Set FSO = CreateObject("Scripting.FileSystemObject")
-    
-    Do
-        Dim result As String
-        result = quiz_list_workbook.Path & "\" & FSO.GetBaseName(quiz_list_workbook.FullName) & Format(Now, "_yyyy-MM-dd_HH-mm-ss") & ".pptx"
-    Loop While Dir(result) <> ""
-    
-    Set FSO = Nothing
-    
-    GetSaveFullName = result
-    
-End Function
-
-
 Private Sub PasteTextToShape(slide_object As Object, lookup_label As String, quiz_text As String)
     Dim targetShape As Object
     Set targetShape = GetShapeByText(slide_object, lookup_label)
