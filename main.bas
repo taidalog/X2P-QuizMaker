@@ -236,7 +236,7 @@ Private Function GetShapeByText(target_slide As Object, target_text As String) A
     Dim SHP As Object
     For Each SHP In target_slide.Shapes
         
-        If SHP.TextFrame.TextRange.Text = target_text Then
+        If LCase(SHP.TextFrame.TextRange.Text) = LCase(target_text) Then
             Set GetShapeByText = SHP
             Exit Function
         End If
