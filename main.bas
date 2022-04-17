@@ -196,6 +196,33 @@ Private Function GetOrOpenPresentation(file_fullname As String) As Object
 End Function
 
 
+Private Function NewSaveFullNameX2P(file_fullname As String, datetime_format As String, template_ppt_fullname As String) As String
+    
+    Dim FSO As Object
+    Set FSO = CreateObject("Scripting.FileSystemObject")
+    
+    '
+    Do
+        Dim fileParentPath As String
+        fileParentPath = FSO.GetParentFolderName(file_fullname)
+        Dim fileBaseName As String
+        fileBaseName = FSO.GetBaseName(file_fullname)
+        Dim fileExtension As String
+        fileExtension = FSO.GetExtensionName(template_ppt_fullname)
+        Dim formattedDateTime As String
+        formattedDateTime = Format(Now, datetime_format)
+        
+        Dim result As String
+        result = fileParentPath & "\" & fileBaseName & formattedDateTime & "." & fileExtension
+    Loop While FSO.FileExists(result)
+    
+    Set FSO = Nothing
+    
+    NewSaveFullNameX2P = result
+    
+End Function
+
+
 Private Function GetSaveFullName(quiz_list_workbook As Workbook) As String
     
     Dim FSO As Object
