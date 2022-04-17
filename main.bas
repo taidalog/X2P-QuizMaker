@@ -8,12 +8,11 @@ Public Sub MakeQuiz()
     
     On Error GoTo Finally
     
+    Dim ST As Double: ST = Timer
+    
     ' Specifies the template PPT file path by cell.
     Dim templatePPTFullName As String
     templatePPTFullName = Replace(ActiveSheet.Range("A1").Value, """", "")
-    
-    Dim PPT As Object
-    Set PPT = CreateObject("PowerPoint.Application")
     
     ' Gets or opens the template PPT file.
     Dim targetPresentation As Object
@@ -35,8 +34,6 @@ Public Sub MakeQuiz()
     '`slidesCount` variable has the number of slides at this moment.
     Dim slidesCount As Long
     slidesCount = targetPresentation.Slides.Count
-    
-    Dim ST As Double: ST = Timer
     
     ' Specifies the cell.
     ' Modify the range address if needed.
@@ -63,6 +60,9 @@ Public Sub MakeQuiz()
     templateColumnIndex = 1
     
     Application.StatusBar = "starting..."
+    
+    Dim PPT As Object
+    Set PPT = CreateObject("PowerPoint.Application")
     
     PPT.Visible = True
     
