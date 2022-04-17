@@ -61,11 +61,6 @@ Public Sub MakeQuiz()
     
     Application.StatusBar = "starting..."
     
-    Dim PPT As Object
-    Set PPT = CreateObject("PowerPoint.Application")
-    
-    PPT.Visible = True
-    
     Debug.Print Timer - ST, "end of begin"
     
     
