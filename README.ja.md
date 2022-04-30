@@ -137,7 +137,7 @@ Excel ワークシートに入力したクイズリストを PowerPoint のス�
 ### マクロを追加する
 
 1. クイズリストファイルを開いてください
-1. [Releases · taidalog/X2P-QuizMaker](https://github.com/taidalog/X2P-QuizMaker/releases) から最新版の「Source code (zip)」をダウンロードしてください（[リンク](https://github.com/taidalog/X2P-QuizMaker/releases)）
+1. [Releases · taidalog/X2P-QuizMaker](https://github.com/taidalog/X2P-QuizMaker/releases) から最新版の「Source code (zip)」をダウンロードしてください
 1. ダウンロードした ZIP ファイルを展開（解凍）してください
 1. 展開（解凍）して手に入れた `main.bas` をクイズリストファイルにインポートしてください
 1. クイズリストファイルの `ThisWorkbook` モジュールに以下のコードをコピーして貼り付けてください  
