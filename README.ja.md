@@ -95,9 +95,9 @@ Excel ワークシートに入力したクイズリストを PowerPoint のス�
     クイズリストファイルと対応していれば、どんな文字列でも構いません
 - ひな型**スライド**は、選択肢の数だけ作成してください  
     4択クイズの場合は、1番が正解の時のスライド、2番が正解の時のスライド、3番のスライド、4番のスライド、という風に4枚必要です  
-    画像
+    ![ひな型スライドは選択肢の数だけ作成](https://github.com/taidalog/X2P-QuizMaker/blob/images/image/X2P_ppt_1_slides_for_answers.png)
 - ひな型スライドは非表示にしてください  
-    画像
+    ![ひな型スライドは非表示](https://github.com/taidalog/X2P-QuizMaker/blob/images/image/X2P_ppt_1_invisible.png)
 - 表紙のスライド等は、必要に応じで作成してください
 
 
