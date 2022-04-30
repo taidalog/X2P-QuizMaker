@@ -75,7 +75,7 @@ Excel ワークシートに入力したクイズリストを PowerPoint のス�
 
 クイズリストの各行の項目が、ひな型スライドに貼り付けされます。
 
-画像
+![実行結果](https://github.com/taidalog/X2P-QuizMaker/blob/images/image/X2P_result.png)
 
 使用するひな型スライドは、クイズリストの `A` 列で指定します。以下のクイズリストの "Quiz 1" の場合、`A4` セルに 2 と入力してありますので、2枚目のひな型スライドが使用されています。
 
@@ -88,7 +88,7 @@ Excel ワークシートに入力したクイズリストを PowerPoint のス�
 
 ## ひな型ファイルの作り方 (PowerPoint)
 
-画像
+![ひな型ファイル](https://github.com/taidalog/X2P-QuizMaker/blob/images/image/X2P_ppt_1.png)
 
 - クイズや選択肢を貼り付けるテキストボックスや図形には、目印となる文字列を入力してください  
     クイズの文章を貼り付ける箇所には `{content}`、1番の選択肢を貼り付ける箇所には `{1}` などです。  
@@ -115,7 +115,8 @@ Excel ワークシートに入力したクイズリストを PowerPoint のス�
 
 ## クイズリストファイルの作り方 (Excel)
 
-画像
+
+![クイズリストファイル](https://github.com/taidalog/X2P-QuizMaker/blob/images/image/X2P_excel.png)
 
 
 ### ひな型ファイルのパスを貼り付ける
