@@ -2,6 +2,8 @@
 
 Version 0.1.0
 
+![demo](https://github.com/taidalog/X2P-QuizMaker/blob/images/image/demo.gif)
+
 [Japanese README](README.ja.md)
 
 ## Table of Contents
