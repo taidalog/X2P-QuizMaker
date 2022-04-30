@@ -96,7 +96,8 @@ Excel ワークシートに入力したクイズリストを PowerPoint のス�
     ![ひな型スライドは選択肢の数だけ作成](https://github.com/taidalog/X2P-QuizMaker/blob/images/image/X2P_ppt_1_slides_for_answers.png)
 - ひな型スライドは非表示にしてください  
     ![ひな型スライドは非表示](https://github.com/taidalog/X2P-QuizMaker/blob/images/image/X2P_ppt_1_invisible.png)
-- 表紙のスライド等は、必要に応じで作成してください
+- 表紙のスライド等は、必要に応じで作成してください  
+    ![表紙のスライド](https://github.com/taidalog/X2P-QuizMaker/blob/images/image/X2P_ppt_1_title.png)
 
 
 ### OK なこと
