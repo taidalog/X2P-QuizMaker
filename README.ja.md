@@ -77,6 +77,8 @@ Excel ワークシートに入力したクイズリストを PowerPoint のス�
 
 ![クイズリスト](https://github.com/taidalog/X2P-QuizMaker/blob/images/image/X2P_excel_quiz_1.png)
 
+![ひな型スライド](https://github.com/taidalog/X2P-QuizMaker/blob/images/image/X2P_ppt_1.png)
+
 ![実行結果](https://github.com/taidalog/X2P-QuizMaker/blob/images/image/X2P_result.png)
 
 使用するひな型スライドは、クイズリストの `A` 列で指定します。上記のクイズリストの "Quiz 1" の場合、`A4` セルに 2 と入力してありますので、2枚目のひな型スライドが使用されています。
