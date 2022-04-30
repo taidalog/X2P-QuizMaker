@@ -149,7 +149,7 @@ Continue:
     Debug.Print
     
     ThisWorkbook.Activate
-    MsgBox "Finished."
+    MsgBox "終了しました。"
     
 Finally:
     If Err.Number > 0 Then MsgBox Err.Number & vbCrLf & Err.Description
@@ -260,7 +260,8 @@ Public Sub AddToContextMenu()
                     .Caption = "&" & ThisWorkbook.Name
 
                     With .Controls.Add(Type:=msoControlButton, Temporary:=True)
-                        .Caption = "Make &Quiz"
+                        '.Caption = "Make &Quiz"
+                        .Caption = "クイズをスライドに流し込む(&Q)"
                         .OnAction = ThisWorkbook.Name & "!MakeQuiz"
                     End With
                     
