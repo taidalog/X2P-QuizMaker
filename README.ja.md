@@ -2,7 +2,7 @@
 
 Version 0.1.0
 
-demo
+![デモ](https://github.com/taidalog/X2P-QuizMaker/blob/images/image/demo.gif)
 
 [English README](README.md)
 
@@ -75,11 +75,13 @@ Excel ワークシートに入力したクイズリストを PowerPoint のス�
 
 クイズリストの各行の項目が、ひな型スライドに貼り付けされます。
 
+![クイズリスト](https://github.com/taidalog/X2P-QuizMaker/blob/images/image/X2P_excel_quiz_1.png)
+
 ![実行結果](https://github.com/taidalog/X2P-QuizMaker/blob/images/image/X2P_result.png)
 
 使用するひな型スライドは、クイズリストの `A` 列で指定します。以下のクイズリストの "Quiz 1" の場合、`A4` セルに 2 と入力してありますので、2枚目のひな型スライドが使用されています。
 
-画像
+![ひな型スライドの指定](https://github.com/taidalog/X2P-QuizMaker/blob/images/image/X2P_excel_slide_index.png)
 
 `{title}` の内容 "Quiz 1" がひな型スライドの `{title}` に貼り付けされています。同様に `{content}` の内容 "10進法の 10 を2進法に変換したものはどれ？" がスライドの `{content}` に、`{1}` の "10" が `{1}` に、それぞれ貼り付けされています。
 
@@ -115,7 +117,6 @@ Excel ワークシートに入力したクイズリストを PowerPoint のス�
 
 ## クイズリストファイルの作り方 (Excel)
 
-
 ![クイズリストファイル](https://github.com/taidalog/X2P-QuizMaker/blob/images/image/X2P_excel.png)
 
 
@@ -135,7 +136,7 @@ Excel ワークシートに入力したクイズリストを PowerPoint のス�
 - クイズリスト内に空の行や列を造らないでください  
     画像
 - クイズリストに隣接するセルには、何も入力せず、空けておいてください  
-    画像
+    ![クイズリストに隣接するセル](https://github.com/taidalog/X2P-QuizMaker/blob/images/image/X2P_excel_keep_blank.png)
 - このファイルを「Excel マクロ有効ブック (*.xlsm)」として保存してください
 
 
