@@ -149,6 +149,7 @@ Continue:
     Debug.Print
     
     ThisWorkbook.Activate
+    'MsgBox "Finished."
     MsgBox "èIóπÇµÇ‹ÇµÇΩÅB"
     
 Finally:
