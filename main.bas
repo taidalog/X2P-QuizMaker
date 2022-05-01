@@ -1,4 +1,10 @@
 Attribute VB_Name = "main"
+' X2P-QuizMaker Version 1.0.1
+' https://github.com/taidalog/X2P-QuizMaker
+' Copyright (c) 2022 taidalog
+' X2P-QuizMaker is licensed under the MIT License.
+' https://github.com/taidalog/X2P-QuizMaker/blob/main/LICENSE
+
 Option Explicit
 
 Public Sub MakeQuiz()
