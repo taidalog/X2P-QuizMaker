@@ -1,6 +1,6 @@
 # X2P-QuizMaker
 
-Version 1.0.0
+Version 1.0.1
 
 ![demo](https://github.com/taidalog/X2P-QuizMaker/blob/images/image/demo.gif)
 
